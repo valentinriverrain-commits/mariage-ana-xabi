@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mariage Ana &amp; Xabi — Galerie</title>
+  <link rel="stylesheet" href="galerie.css" />
+</head>
+<body>
+
+  <a class="back" href="index.html" aria-label="Retour">&larr;</a>
+
+  <!-- Photo au centre, dans le viseur -->
+  <div class="viewer">
+    <div class="photo-frame" id="photoFrame">
+      <img id="main" src="" alt="" />
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+    </div>
+  </div>
+
+  <!-- Pellicule de toutes les photos -->
+  <div class="strip" id="strip">
+    <div class="strip-inner" id="stripInner"></div>
+  </div>
+
+  <div class="grain"></div>
+
+  <script src="galerie.js"></script>
+</body>
+</html>

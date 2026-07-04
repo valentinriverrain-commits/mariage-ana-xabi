@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mariage Ana &amp; Xabi</title>
+  <meta name="description" content="Le film du mariage d'Ana &amp; Xabi — 27 juin 2026." />
+  <meta property="og:title" content="Mariage Ana &amp; Xabi" />
+  <meta property="og:type" content="video.other" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ÉTAPE 1 — Loader 0 → 100% -->
+  <div id="loader" class="stage loader" aria-label="Chargement">
+    <div class="loader-ring">
+      <svg viewBox="0 0 160 160" class="ring-svg">
+        <circle class="ring-track" cx="80" cy="80" r="72" />
+        <circle class="ring-progress" cx="80" cy="80" r="72" />
+      </svg>
+      <span id="percent" class="percent">0%</span>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 — Les photos arrivent du bas (diagonale) et s'empilent au centre,
+       puis la photo du dessus s'agrandit -->
+  <div id="montage" class="stage montage" hidden>
+    <div class="stack" id="stack"></div>
+    <!-- Viseur (coins) au centre, comme l'inspiration -->
+    <div class="frame" id="frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 — Le film, plein écran (lecteur personnalisé plus tard) -->
+  <div id="film-stage" class="stage film-stage" hidden>
+    <video id="film" class="film" playsinline muted loop preload="auto" poster="assets/photos/poster.jpg">
+      <source src="assets/video/film.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Barre de chapitres façon pellicule -->
+    <div id="scrubber" class="scrubber" aria-label="Chapitres du film">
+      <!-- Vignette de prévisualisation (frame + 4 angles, sans texte) -->
+      <div id="scrubPreview" class="scrub-preview">
+        <video id="scrubThumb" class="scrub-thumb" muted playsinline preload="auto">
+          <source src="assets/video/film.mp4" type="video/mp4" />
+        </video>
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+      </div>
+      <!-- Les traits (règle) sont générés en JS -->
+      <div id="scrubTicks" class="scrub-ticks"></div>
+    </div>
+
+    <a class="to-gallery" href="galerie.html">Galerie&nbsp;&rarr;</a>
+  </div>
+
+  <!-- Grain léger (sans glow) -->
+  <div class="grain"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>

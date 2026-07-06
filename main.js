@@ -140,37 +140,39 @@ function goFilm() {
   document.body.classList.add("playing");
   setTimeout(() => { montage.hidden = true; }, 800);
   const f = el("film");
-  const pr = f.play();
-  if (pr && pr.catch) pr.catch(() => {});
-  if (soundHint && f.muted) soundHint.classList.add("show");   // invite : activer le son
+  tryPlayWithSound(f);
 }
 
-/* ---------- Son (autoplay muet → clic pour activer) ---------- */
-const soundBtn  = el("soundBtn");
-const soundHint = el("soundHint");
-let soundOn = false;
-
-function setSound(on) {
-  const f = el("film");
-  soundOn = on;
-  f.muted = !on;
-  if (on) f.volume = 1;
-  if (soundBtn) {
-    soundBtn.querySelector(".sound-ico").innerHTML = on ? "&#128266;" : "&#128263;";
-    soundBtn.setAttribute("aria-label", on ? "Couper le son" : "Activer le son");
+/* ---------- Son : automatique si le navigateur l'autorise,
+     sinon activé tout seul au 1er geste (clic/touche) — sans bouton ---------- */
+function tryPlayWithSound(f) {
+  f.muted = false;
+  f.volume = 1;
+  const p = f.play();
+  if (p && p.catch) {
+    p.catch(() => {
+      // Autoplay AVEC son bloqué par le navigateur → on démarre en muet…
+      f.muted = true;
+      f.play().catch(() => {});
+      armUnmute(f);   // …et le son s'active au tout premier geste
+    });
   }
-  if (on && soundHint) soundHint.classList.remove("show");
 }
 
-if (soundBtn) {
-  soundBtn.addEventListener("click", (e) => { e.stopPropagation(); setSound(!soundOn); });
+function armUnmute(f) {
+  const unmute = () => {
+    f.muted = false;
+    f.volume = 1;
+    const pr = f.play(); if (pr && pr.catch) pr.catch(() => {});
+    ["pointerdown", "keydown", "touchstart"].forEach((ev) =>
+      document.removeEventListener(ev, unmute, true));
+  };
+  ["pointerdown", "keydown", "touchstart"].forEach((ev) =>
+    document.addEventListener(ev, unmute, true));
 }
 
-/* ---------- Passer l'intro (clic) + activer le son ---------- */
-document.addEventListener("click", () => {
-  if (stage !== "film") { goFilm(); }
-  else if (!soundOn) { setSound(true); }   // 1er clic pendant le film → active le son
-});
+/* ---------- Passer l'intro (clic) ---------- */
+document.addEventListener("click", () => { if (stage !== "film") goFilm(); });
 
 /* =========================================================
    Barre de chapitres (règle façon pellicule)

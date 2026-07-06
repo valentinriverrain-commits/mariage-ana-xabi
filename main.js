@@ -8,12 +8,12 @@
 
 // 8 photos de fond de la pile (modifiable : fichiers de assets/photos)
 const PHOTOS_BG = [
-  "assets/photos/g04.jpg", "assets/photos/d03.jpg", "assets/photos/g07.jpg",
-  "assets/photos/g01.jpg", "assets/photos/g06.jpg", "assets/photos/d01.jpg",
-  "assets/photos/g02.jpg", "assets/photos/d04.jpg",
+  "assets/photos/v02.jpg", "assets/photos/w07.jpg", "assets/photos/v04.jpg",
+  "assets/photos/v07.jpg", "assets/photos/w18.jpg", "assets/photos/v01.jpg",
+  "assets/photos/v06.jpg", "assets/photos/v03.jpg",
 ];
-// Photo du DESSUS = 1re image de la vidéo → l'agrandissement enchaîne sans coupure.
-// (À remplacer en même temps que la vidéo finale.)
+// Photo du DESSUS = 1re image de la vidéo (poster.jpg = frame t=0 du film)
+// → l'agrandissement enchaîne sans coupure sur le début de la vidéo.
 const PHOTO_TOP = "assets/photos/poster.jpg";
 
 // Pile : les photos arrivent dans l'axe central, SANS décalage, juste une rotation.

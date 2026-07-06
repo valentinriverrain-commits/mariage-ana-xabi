@@ -140,35 +140,22 @@ function goFilm() {
   document.body.classList.add("playing");
   setTimeout(() => { montage.hidden = true; }, 800);
   const f = el("film");
-  tryPlayWithSound(f);
+  f.play().catch(() => {});   // démarre en muet (attribut HTML) — lecture garantie
+  attemptSound(f);
 }
 
-/* ---------- Son : automatique si le navigateur l'autorise,
-     sinon activé tout seul au 1er geste (clic/touche) — sans bouton ---------- */
-function tryPlayWithSound(f) {
+/* ---------- Son : auto si le navigateur l'autorise, sinon au tout 1er geste ---------- */
+function attemptSound(f) {
+  // 1) tentative directe (fonctionne si le site a déjà un "engagement" utilisateur)
   f.muted = false;
   f.volume = 1;
   const p = f.play();
-  if (p && p.catch) {
-    p.catch(() => {
-      // Autoplay AVEC son bloqué par le navigateur → on démarre en muet…
-      f.muted = true;
-      f.play().catch(() => {});
-      armUnmute(f);   // …et le son s'active au tout premier geste
-    });
-  }
-}
+  if (p && p.catch) p.catch(() => { f.muted = true; f.play().catch(() => {}); });
 
-function armUnmute(f) {
-  const unmute = () => {
-    f.muted = false;
-    f.volume = 1;
-    const pr = f.play(); if (pr && pr.catch) pr.catch(() => {});
-    ["pointerdown", "keydown", "touchstart"].forEach((ev) =>
-      document.removeEventListener(ev, unmute, true));
-  };
-  ["pointerdown", "keydown", "touchstart"].forEach((ev) =>
-    document.addEventListener(ev, unmute, true));
+  // 2) garantie : le tout premier geste utilisateur active le son
+  const unmute = () => { f.muted = false; f.volume = 1; f.play().catch(() => {}); };
+  ["pointerdown", "click", "keydown", "touchstart", "mousedown"].forEach((ev) =>
+    document.addEventListener(ev, unmute, { capture: true }));
 }
 
 /* ---------- Passer l'intro (clic) ---------- */

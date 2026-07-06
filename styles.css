@@ -206,6 +206,34 @@ html, body {
 }
 .to-gallery:hover { color: var(--gold); }
 
+/* ====== Bouton Play (apparaît quand le film est prêt) ====== */
+.play-btn {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 600;
+  width: 92px; height: 92px;
+  padding: 0; border: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 550ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.play-btn[hidden] { display: none; }
+.play-btn.show { opacity: 1; }
+.play-btn svg {
+  width: 100%; height: 100%;
+  display: block;
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.5));
+  transition: transform 250ms ease;
+}
+.play-btn:hover svg { transform: scale(1.07); }
+.pb-ring { fill: rgba(0, 0, 0, 0.32); stroke: var(--white); stroke-width: 1.5; transition: stroke 250ms ease; }
+.pb-tri  { fill: var(--white); transition: fill 250ms ease; }
+.play-btn:hover .pb-ring { stroke: var(--gold); }
+.play-btn:hover .pb-tri  { fill: var(--gold); }
+
 /* ====== Grain léger (sans glow) ====== */
 .grain {
   position: fixed;

@@ -126,8 +126,8 @@ function zoomTop() {
   const scale = Math.max(window.innerWidth / r.width, window.innerHeight / r.height) * 1.04;
   topCard.classList.add("zoom");
   topCard.style.transform = `translate(-50%, -50%) scale(${scale})`;
-  // la vidéo prend le relais quand l'agrandissement est presque fini
-  setTimeout(goFilm, ZOOM_MS - 120);
+  // quand l'agrandissement est presque fini, on affiche le bouton Play (pas d'autoplay)
+  setTimeout(showPlay, ZOOM_MS - 120);
 }
 
 /* ---------- 3) LE FILM (plein écran) ---------- */
@@ -139,26 +139,31 @@ function goFilm() {
   filmStage.classList.add("fade-in");        // crossfade depuis la photo agrandie (même image)
   document.body.classList.add("playing");
   setTimeout(() => { montage.hidden = true; }, 800);
+  hidePlay();                 // masque le bouton play
   const f = el("film");
-  f.play().catch(() => {});   // démarre en muet (attribut HTML) — lecture garantie
-  attemptSound(f);
-}
-
-/* ---------- Son : auto si le navigateur l'autorise, sinon au tout 1er geste ---------- */
-function attemptSound(f) {
-  // 1) tentative directe (fonctionne si le site a déjà un "engagement" utilisateur)
-  f.muted = false;
+  f.muted = false;            // lancé par un clic → le son est autorisé
   f.volume = 1;
-  const p = f.play();
-  if (p && p.catch) p.catch(() => { f.muted = true; f.play().catch(() => {}); });
-
-  // 2) garantie : le tout premier geste utilisateur active le son
-  const unmute = () => { f.muted = false; f.volume = 1; f.play().catch(() => {}); };
-  ["pointerdown", "click", "keydown", "touchstart", "mousedown"].forEach((ev) =>
-    document.addEventListener(ev, unmute, { capture: true }));
+  const pr = f.play();
+  if (pr && pr.catch) pr.catch(() => { f.muted = true; f.play().catch(() => {}); });  // sécurité
 }
 
-/* ---------- Passer l'intro (clic) ---------- */
+/* ---------- Bouton Play : apparaît quand le film est prêt ; le clic = lecture + son ---------- */
+const playBtn = el("playBtn");
+function showPlay() {
+  if (stage === "film" || !playBtn) return;
+  playBtn.hidden = false;
+  requestAnimationFrame(() => playBtn.classList.add("show"));
+}
+function hidePlay() {
+  if (!playBtn) return;
+  playBtn.classList.remove("show");
+  setTimeout(() => { playBtn.hidden = true; }, 400);
+}
+if (playBtn) {
+  playBtn.addEventListener("click", (e) => { e.stopPropagation(); goFilm(); });
+}
+
+/* ---------- Clic ailleurs pendant l'intro = lancer aussi (avec son) ---------- */
 document.addEventListener("click", () => { if (stage !== "film") goFilm(); });
 
 /* =========================================================

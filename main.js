@@ -142,10 +142,35 @@ function goFilm() {
   const f = el("film");
   const pr = f.play();
   if (pr && pr.catch) pr.catch(() => {});
+  if (soundHint && f.muted) soundHint.classList.add("show");   // invite : activer le son
 }
 
-/* ---------- Passer l'intro (clic) ---------- */
-document.addEventListener("click", () => { if (stage !== "film") goFilm(); });
+/* ---------- Son (autoplay muet → clic pour activer) ---------- */
+const soundBtn  = el("soundBtn");
+const soundHint = el("soundHint");
+let soundOn = false;
+
+function setSound(on) {
+  const f = el("film");
+  soundOn = on;
+  f.muted = !on;
+  if (on) f.volume = 1;
+  if (soundBtn) {
+    soundBtn.querySelector(".sound-ico").innerHTML = on ? "&#128266;" : "&#128263;";
+    soundBtn.setAttribute("aria-label", on ? "Couper le son" : "Activer le son");
+  }
+  if (on && soundHint) soundHint.classList.remove("show");
+}
+
+if (soundBtn) {
+  soundBtn.addEventListener("click", (e) => { e.stopPropagation(); setSound(!soundOn); });
+}
+
+/* ---------- Passer l'intro (clic) + activer le son ---------- */
+document.addEventListener("click", () => {
+  if (stage !== "film") { goFilm(); }
+  else if (!soundOn) { setSound(true); }   // 1er clic pendant le film → active le son
+});
 
 /* =========================================================
    Barre de chapitres (règle façon pellicule)

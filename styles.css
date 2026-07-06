@@ -211,7 +211,7 @@ html, body {
   position: fixed;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 600;
+  z-index: 2000;   /* au-dessus de la photo agrandie (z-index 999) */
   width: 92px; height: 92px;
   padding: 0; border: 0;
   background: transparent;
